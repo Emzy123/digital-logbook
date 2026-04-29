@@ -1,0 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const adminController_1 = require("../controllers/adminController");
+const authMiddleware_1 = require("../middleware/authMiddleware");
+const auditMiddleware_1 = require("../middleware/auditMiddleware");
+const User_1 = require("../models/User");
+const router = (0, express_1.Router)();
+router.use(authMiddleware_1.authenticate);
+router.use((0, authMiddleware_1.authorize)([User_1.UserRole.ITF_ADMIN, User_1.UserRole.COORDINATOR, User_1.UserRole.SYSTEM_ADMIN]));
+router.get('/users', adminController_1.getAllUsers);
+router.get('/audit-logs', adminController_1.getAuditLogs);
+router.post('/users/bulk', (0, auditMiddleware_1.auditAction)('BULK_IMPORT_USERS'), adminController_1.bulkImportUsers);
+router.get('/supervisors', adminController_1.getSupervisors);
+router.post('/supervisors/create', (0, auditMiddleware_1.auditAction)('CREATE_SUPERVISOR'), adminController_1.createSupervisor);
+router.get('/students', adminController_1.getStudents);
+router.post('/assignments', (0, auditMiddleware_1.auditAction)('ASSIGN_SUPERVISOR'), adminController_1.assignSupervisor);
+exports.default = router;

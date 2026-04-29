@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const weeklySummaryController_1 = require("../controllers/weeklySummaryController");
+const authMiddleware_1 = require("../middleware/authMiddleware");
+const router = (0, express_1.Router)();
+router.use(authMiddleware_1.authenticate);
+router.get('/', weeklySummaryController_1.getSummaries);
+router.post('/', weeklySummaryController_1.createOrUpdateSummary);
+router.get('/:id/pdf', weeklySummaryController_1.downloadWeeklyPdf);
+exports.default = router;

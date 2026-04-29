@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const analyticsController_1 = require("../controllers/analyticsController");
+const authMiddleware_1 = require("../middleware/authMiddleware");
+const User_1 = require("../models/User");
+const router = (0, express_1.Router)();
+router.use(authMiddleware_1.authenticate);
+router.use((0, authMiddleware_1.authorize)([User_1.UserRole.ITF_ADMIN, User_1.UserRole.COORDINATOR, User_1.UserRole.SYSTEM_ADMIN]));
+router.get('/metrics', analyticsController_1.getSystemMetrics);
+router.post('/generate-final-report', analyticsController_1.getFinalITFReportDoc);
+router.get('/trends', analyticsController_1.getTrendAnalysis);
+router.get('/regional-comparisons', analyticsController_1.getRegionalComparisons);
+router.get('/supervisor-performance', analyticsController_1.getSupervisorPerformanceAnalytics);
+exports.default = router;

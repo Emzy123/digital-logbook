@@ -1,0 +1,20 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const supervisorController_1 = require("../controllers/supervisorController");
+const authMiddleware_1 = require("../middleware/authMiddleware");
+const User_1 = require("../models/User");
+const router = (0, express_1.Router)();
+router.use(authMiddleware_1.authenticate);
+// Only supervisors can access
+router.use((0, authMiddleware_1.authorize)([User_1.UserRole.INDUSTRY_SUPERVISOR, User_1.UserRole.SCHOOL_SUPERVISOR]));
+router.get('/assigned-students', supervisorController_1.getAssignedStudents);
+router.get('/students/:studentId/logs', supervisorController_1.getStudentLogs);
+router.get('/students/:studentId/weekly-summaries', supervisorController_1.getStudentWeeklySummaries);
+router.put('/logs/:id/review', supervisorController_1.reviewLog);
+router.put('/weekly-summaries/:id/review', supervisorController_1.reviewWeeklySummary);
+router.post('/students/:studentId/visits', supervisorController_1.logSupervisorVisit);
+router.get('/students/:studentId/visits', supervisorController_1.getStudentVisits);
+router.get('/students/:studentId/assessment-status', supervisorController_1.getAssessmentStatus);
+router.post('/students/:studentId/assessment', supervisorController_1.submitAssessment);
+exports.default = router;

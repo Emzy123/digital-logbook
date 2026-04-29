@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const logEntryController_1 = require("../controllers/logEntryController");
+const authMiddleware_1 = require("../middleware/authMiddleware");
+const uploadMiddleware_1 = require("../middleware/uploadMiddleware");
+const router = (0, express_1.Router)();
+router.use(authMiddleware_1.authenticate);
+router.post('/', uploadMiddleware_1.upload.array('files', 5), logEntryController_1.createLogEntry);
+router.get('/', logEntryController_1.getLogEntries);
+router.get('/:id', logEntryController_1.getLogEntryById);
+router.put('/:id', uploadMiddleware_1.upload.array('files', 5), logEntryController_1.updateLogEntry);
+exports.default = router;
