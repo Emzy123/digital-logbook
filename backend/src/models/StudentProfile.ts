@@ -3,6 +3,8 @@ import mongoose, { Document, Schema } from 'mongoose';
 export interface IStudentProfile extends Document {
   user_id: mongoose.Types.ObjectId;
   matriculation_number: string;
+  faculty?: string;
+  course_of_study?: string;
   department?: string;
   program_level?: string;
   current_semester?: number;
@@ -25,6 +27,8 @@ export interface IStudentProfile extends Document {
 const StudentProfileSchema = new Schema<IStudentProfile>({
   user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
   matriculation_number: { type: String, required: true, unique: true, index: true },
+  faculty: { type: String },
+  course_of_study: { type: String },
   department: { type: String },
   program_level: { type: String },
   current_semester: { type: Number },

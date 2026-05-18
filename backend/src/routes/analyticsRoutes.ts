@@ -4,7 +4,8 @@ import {
   getFinalITFReportDoc, 
   getTrendAnalysis, 
   getRegionalComparisons, 
-  getSupervisorPerformanceAnalytics 
+  getSupervisorPerformanceAnalytics,
+  getGroupedStats
 } from '../controllers/analyticsController';
 import { authenticate, authorize } from '../middleware/authMiddleware';
 import { UserRole } from '../models/User';
@@ -19,5 +20,6 @@ router.post('/generate-final-report', getFinalITFReportDoc);
 router.get('/trends', getTrendAnalysis);
 router.get('/regional-comparisons', getRegionalComparisons);
 router.get('/supervisor-performance', getSupervisorPerformanceAnalytics);
+router.get('/grouped', getGroupedStats);
 
 export default router;

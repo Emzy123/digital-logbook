@@ -1,4 +1,8 @@
 import { useEffect, useState } from 'react';
+import { Button } from '@headlessui/react';
+import axios from 'axios';
+import { SearchBar } from '../components/common/SearchBar';
+import { ExportButton } from '../components/common/ExportButton';
 import api from '../services/api';
 
 const EMPTY_FORM = { first_name: '', last_name: '', email: '', phone: '', password: '', role: 'industry_supervisor', establishment_id: '' };
@@ -297,8 +301,11 @@ export default function AdminDashboard() {
 
       <div className="space-y-6 max-w-7xl mx-auto pb-12">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">SIWES Administrative Console</h1>
-          <div className="flex gap-3">
+          <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+          <div className="flex-1 max-w-xl mx-8">
+            <SearchBar />
+          </div>
+          <div className="flex items-center space-x-4">
             <button
               onClick={() => setShowCreateModal(true)}
               className="px-5 py-2.5 bg-primary-600 text-white rounded-lg shadow-sm hover:bg-primary-700 transition font-semibold flex items-center gap-2"
@@ -312,6 +319,7 @@ export default function AdminDashboard() {
                 Bulk Import
               </button>
             )}
+            <ExportButton entity="students" label="Export Students" />
           </div>
         </div>
 

@@ -21,6 +21,9 @@ import coordinatorOversightRoutes from './routes/coordinatorOversightRoutes';
 import assessmentRoutes from './routes/assessmentRoutes';
 import itfOversightRoutes from './routes/itfOversightRoutes';
 import digitalStorageRoutes from './routes/digitalStorageRoutes';
+import searchRoutes from './routes/searchRoutes';
+import reportRoutes from './routes/reportRoutes';
+import exportRoutes from './routes/exportRoutes';
 import path from 'path';
 
 const app = express();
@@ -77,6 +80,9 @@ app.use('/api/coordinator-oversight', coordinatorOversightRoutes);
 app.use('/api/assessments', assessmentRoutes);
 app.use('/api/itf-oversight', itfOversightRoutes);
 app.use('/api/digital-storage', digitalStorageRoutes);
+app.use('/api/search', searchRoutes);
+app.use('/api/reports', reportRoutes);
+app.use('/api/export', exportRoutes);
 
 // Static file serving for uploads
 app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));

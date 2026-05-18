@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../services/api';
 
 interface ProfileData {
+  id?: string;
   matriculation_number: string;
   department: string;
   program_level: string;
@@ -71,6 +72,7 @@ export default function Profile() {
       const res = await api.get('/students/profile');
       const data = res.data;
       setProfile({
+        id: data._id,
         matriculation_number: data.matriculation_number || '',
         department: data.department || '',
         program_level: data.program_level || '',
@@ -165,11 +167,38 @@ export default function Profile() {
 
   const BACKEND_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
 
+  const handleDownloadPDF = async () => {
+    if (!profile.id) return;
+    try {
+      const response = await api.get(`/reports/pdf/final/${profile.id}`, {
+        responseType: 'blob',
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `SIWES_Final_Report_${profile.matriculation_number}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+      alert('Failed to download PDF report.');
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto pb-16">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 tracking-tight">My Profile</h1>
-        <p className="mt-1 text-gray-500">Manage your SIWES student placement information.</p>
+      <div className="mb-8 flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">My Profile</h1>
+          <p className="mt-1 text-gray-500">Manage your SIWES student placement information.</p>
+        </div>
+        <button
+          onClick={handleDownloadPDF}
+          className="px-4 py-2 bg-secondary-600 text-white rounded-lg shadow-sm hover:bg-secondary-700 transition font-semibold"
+        >
+          Download Final Report (PDF)
+        </button>
       </div>
 
       {/* Account Info Card */}

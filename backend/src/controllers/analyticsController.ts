@@ -40,6 +40,41 @@ export const getSystemMetrics = async (req: AuthRequest, res: Response) => {
     }
 };
 
+export const getGroupedStats = async (req: AuthRequest, res: Response) => {
+    try {
+        const { groupBy = 'department' } = req.query; // department, faculty, course, role
+        
+        if (groupBy === 'role') {
+            const roleStats = await User.aggregate([
+                { $group: { _id: '$role', count: { $sum: 1 } } }
+            ]);
+            return res.status(200).json({ groupedData: roleStats });
+        }
+
+        let groupField = `$student.${groupBy}`;
+        if (groupBy === 'course') {
+             groupField = `$student.course_of_study`;
+        }
+
+        const stats = await LogEntry.aggregate([
+            { $match: { status: LogStatus.APPROVED } },
+            { $lookup: { from: 'studentprofiles', localField: 'student_id', foreignField: '_id', as: 'student' } },
+            { $unwind: '$student' },
+            { $group: {
+                _id: groupField,
+                totalHours: { $sum: '$total_hours' },
+                totalEntries: { $sum: 1 },
+                avgHours: { $avg: '$total_hours' }
+            }}
+        ]);
+
+        res.status(200).json({ groupedData: stats });
+    } catch(err) {
+        console.error('getGroupedStats error:', err);
+        res.status(500).json({ message: 'Error retrieving grouped stats' });
+    }
+};
+
 import { generateFinalITFReport } from '../utils/pdfGenerator';
 import { AssessorType } from '../models/Assessment';
 
